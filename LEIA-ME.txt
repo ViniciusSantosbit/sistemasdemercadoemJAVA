@@ -1,0 +1,35 @@
+SISTEMA DE SUPERMERCADO - Trabalho Pratico POO
+(no mesmo modelo do projeto CrudJava10 do professor)
+
+COMO RODAR
+1. MySQL Workbench: abra database/supermercado_trabalho.sql e execute tudo (raio).
+2. Confira usuario/senha/porta em src/br/com/entidade/DAO.java (metodo abrirBanco).
+3. NetBeans: File > Open Project > SupermercadoPOO > Run (a classe principal e br.com.visao.TelaPrincipal).
+   O driver do MySQL fica em lib/mysql-connector-j-9.1.0.jar (ja configurado em Libraries).
+
+ORGANIZACAO (igual ao projeto do professor)
+br.com.controle  -> classes com atributos privados + get/set (Categoria, Fornecedor, Funcionario,
+                    Pessoa, Produto, Venda, ItemVenda)
+br.com.entidade  -> DAO (abrirBanco/fecharBanco) e as classes ManterXxx que herdam de DAO e fazem
+                    inserir, deletarXxx, PesquisarRegistro, PesquisarTudo e editarXxx
+br.com.visao     -> telas JFrame feitas no editor visual (.form): CadastroXxx, FormAlterarXxx,
+                    FormDeletarXxx, FormListarXxx e TelaPrincipal com o menu
+
+REQUISITOS DO TRABALHO
+4 CRUDs simples ...... Categoria, Fornecedor, Funcionario, Produto (Cadastrar/Alterar/Deletar/Listar)
+CRUD principal ....... Venda no caixa: CadastroVenda (caixa), FormAlterarVenda, FormDeletarVenda,
+                       FormListarVendas. Relaciona funcionario (operador) e produtos (item_venda).
+                       CPF na nota e opcional (nao ha cadastro de cliente).
+Consulta com JOIN .... ManterVenda.selectJoin (venda + funcionario), ManterVenda.PesquisarItens
+                       (item_venda + produto) e ManterProduto (produto + categoria)
+Relatorio ............ FormRelatorioVendas: vendas por periodo, total vendido, botao Imprimir
+Banco ................ database/supermercado_trabalho.sql (PKs, FKs, relacionamentos e dados)
+
+POO NO PROJETO
+Classe/objeto: cada linha do banco vira um objeto (ex.: new Produto()).
+Encapsulamento: atributos private com get/set.
+Heranca: Funcionario extends Pessoa; ManterXxx extends DAO.
+Classe abstrata e polimorfismo: Pessoa e abstrata e tem getTipo(), que Funcionario implementa.
+Agregacao: Venda tem uma lista de ItemVenda (getItens, adicionarItem, calcularTotal).
+Associacao: Produto se liga a Categoria (codigoCategoria = chave estrangeira).
+Mensagem: a tela chama ma.inserir(objeto), ma.PesquisarTudo()...
