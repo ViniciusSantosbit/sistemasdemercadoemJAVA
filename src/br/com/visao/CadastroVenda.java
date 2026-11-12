@@ -11,7 +11,11 @@ import br.com.controle.Venda;
 import br.com.entidade.ManterFuncionario;
 import br.com.entidade.ManterProduto;
 import br.com.entidade.ManterVenda;
+import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -28,7 +32,7 @@ public class CadastroVenda extends javax.swing.JFrame {
      */
     public CadastroVenda() {
         initComponents();
-        jCproduto.getAccessibleContext().setAccessibleName("Selecionar produto");
+        configurarInterface();
         jCproduto.addActionListener(evt -> {
             OpcaoProduto opcao = (OpcaoProduto) jCproduto.getSelectedItem();
             if (opcao != null && opcao.produto() != null) {
@@ -55,11 +59,6 @@ public class CadastroVenda extends javax.swing.JFrame {
         jCpagamento.addItem("PIX");
         jCpagamento.addItem("Cartao de Debito");
         jCpagamento.addItem("Cartao de Credito");
-        jLtotal.setFont(jLtotal.getFont().deriveFont(java.awt.Font.BOLD, 20f));
-        jLtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLtotal.setForeground(new java.awt.Color(25, 65, 100));
-        jBfinalizar.setFont(jBfinalizar.getFont().deriveFont(java.awt.Font.BOLD));
-        jTbitens.setRowHeight(28);
         jTbitens.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jBremover.setEnabled(false);
         jTbitens.getSelectionModel().addListSelectionListener(evt ->
@@ -74,6 +73,37 @@ public class CadastroVenda extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println("Erro " + e.getMessage());
         }
+    }
+
+    private void configurarInterface() {
+        jLabel1.setLabelFor(jCfuncionario);
+        jLabel1.setDisplayedMnemonic(KeyEvent.VK_O);
+        jLabel2.setLabelFor(jTcpf);
+        jLabel2.setDisplayedMnemonic(KeyEvent.VK_F);
+        jLabel3.setText("Código de barras:");
+        jLabel3.setLabelFor(jTcodigoBarras);
+        jLabel3.setDisplayedMnemonic(KeyEvent.VK_B);
+        jLproduto.setLabelFor(jCproduto);
+        jLproduto.setDisplayedMnemonic(KeyEvent.VK_P);
+        jLabel4.setLabelFor(jTquantidade);
+        jLabel4.setDisplayedMnemonic(KeyEvent.VK_Q);
+        jLabel5.setLabelFor(jCpagamento);
+        jLabel5.setDisplayedMnemonic(KeyEvent.VK_M);
+        jBadicionar.setMnemonic(KeyEvent.VK_A);
+        jBremover.setMnemonic(KeyEvent.VK_R);
+        jTcodigoBarras.getAccessibleContext().setAccessibleDescription("Pressione Enter para adicionar o item.");
+        jTbitens.getAccessibleContext().setAccessibleName("Itens da venda");
+        jTbitens.setRowHeight(32);
+        jTbitens.getColumnModel().getColumn(0).setHeaderValue("Código");
+        jTbitens.getColumnModel().getColumn(2).setHeaderValue("Quantidade");
+        jTbitens.getColumnModel().getColumn(3).setHeaderValue("Preço unitário");
+        jTbitens.getColumnModel().getColumn(1).setPreferredWidth(300);
+
+        jLtotal.setFont(jLtotal.getFont().deriveFont(Font.BOLD, 22f));
+        jLtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLtotal.setForeground(TemaInterface.DESTAQUE);
+        jBfinalizar.setFont(jBfinalizar.getFont().deriveFont(Font.BOLD));
+        setMinimumSize(getMinimumSize());
     }
 
     private record OpcaoProduto(Produto produto) {
@@ -390,41 +420,17 @@ public class CadastroVenda extends javax.swing.JFrame {
             tabela.addRow(new Object[]{item.getCodigoProduto(), item.getNomeProduto(), item.getQuantidade(),
                 String.format("R$ %.2f", item.getPrecoUnitario()), String.format("R$ %.2f", item.getSubtotal())});
         }
-        jLtotal.setText(String.format("TOTAL: R$ %.2f", venda.getTotal()));
+        NumberFormat moeda = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("pt-BR"));
+        jLtotal.setText("TOTAL: " + moeda.format(venda.getTotal()));
     }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CadastroVenda().setVisible(true);
-            }
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            TemaInterface.instalar();
+            new CadastroVenda().setVisible(true);
         });
     }
 

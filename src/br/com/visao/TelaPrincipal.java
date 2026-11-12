@@ -4,6 +4,20 @@
  */
 package br.com.visao;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -16,11 +30,84 @@ public class TelaPrincipal extends javax.swing.JFrame {
      */
     public TelaPrincipal() {
         initComponents();
-        jLabel1.setFont(jLabel1.getFont().deriveFont(java.awt.Font.BOLD, 26f));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        setSize(720, 320);
+        configurarMenu();
+        montarInicio();
+        pack();
+        setMinimumSize(getSize());
         setLocationRelativeTo(null);
+    }
+
+    private void configurarMenu() {
+        jMenu1.setMnemonic(KeyEvent.VK_C);
+        jMenu2.setMnemonic(KeyEvent.VK_O);
+        jMenu3.setText("Funcionários");
+        jMenu3.setMnemonic(KeyEvent.VK_F);
+        jMenu4.setMnemonic(KeyEvent.VK_P);
+        jMenu5.setMnemonic(KeyEvent.VK_V);
+        jMenu6.setText("Relatórios");
+        jMenu6.setMnemonic(KeyEvent.VK_R);
+        jMenuItem21.setText("Vendas por período");
+        jMenuItem17.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+    }
+
+    private void montarInicio() {
+        JPanel inicio = new JPanel(new BorderLayout(0, 20));
+        inicio.setBackground(TemaInterface.FUNDO);
+        inicio.setBorder(BorderFactory.createEmptyBorder(24, 28, 24, 28));
+
+        JPanel cabecalho = new JPanel();
+        cabecalho.setLayout(new BoxLayout(cabecalho, BoxLayout.PAGE_AXIS));
+        cabecalho.setBackground(TemaInterface.DESTAQUE);
+        cabecalho.setBorder(BorderFactory.createEmptyBorder(22, 24, 22, 24));
+        jLabel1.setText("Sistema de Supermercado");
+        jLabel1.setFont(jLabel1.getFont().deriveFont(Font.BOLD, 30f));
+        jLabel1.setForeground(Color.WHITE);
+        jLabel2.setText("Abra o caixa ou consulte as operações da loja.");
+        jLabel2.setForeground(Color.WHITE);
+        cabecalho.add(jLabel1);
+        cabecalho.add(Box.createVerticalStrut(6));
+        cabecalho.add(jLabel2);
+        inicio.add(cabecalho, BorderLayout.NORTH);
+
+        JPanel atalhos = new JPanel(new GridLayout(2, 2, 16, 16));
+        atalhos.setOpaque(false);
+        atalhos.add(criarAtalho("Caixa", "Registre itens e receba pagamentos.",
+                "Nova venda (F2)", jMenuItem17));
+        atalhos.add(criarAtalho("Vendas", "Consulte as vendas registradas.",
+                "Listar vendas", jMenuItem20));
+        atalhos.add(criarAtalho("Produtos", "Consulte o catálogo e o estoque.",
+                "Listar produtos", jMenuItem16));
+        atalhos.add(criarAtalho("Relatórios", "Consulte vendas por intervalo de datas.",
+                "Vendas por período", jMenuItem21));
+        inicio.add(atalhos, BorderLayout.CENTER);
+        setContentPane(inicio);
+    }
+
+    private JPanel criarAtalho(String titulo, String descricao, String acao, JMenuItem item) {
+        JPanel painel = new JPanel(new BorderLayout(0, 14));
+        painel.setBackground(TemaInterface.SUPERFICIE);
+        painel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(TemaInterface.BORDA),
+                BorderFactory.createEmptyBorder(16, 18, 16, 18)));
+
+        JLabel rotulo = new JLabel(titulo);
+        rotulo.setFont(rotulo.getFont().deriveFont(Font.BOLD, 18f));
+        rotulo.setForeground(TemaInterface.TEXTO);
+        JLabel resumo = new JLabel(descricao);
+        resumo.setForeground(TemaInterface.TEXTO_SECUNDARIO);
+        JPanel texto = new JPanel(new BorderLayout(0, 4));
+        texto.setOpaque(false);
+        texto.add(rotulo, BorderLayout.NORTH);
+        texto.add(resumo, BorderLayout.CENTER);
+        painel.add(texto, BorderLayout.NORTH);
+
+        JButton botao = new JButton(acao);
+        Dimension tamanho = botao.getPreferredSize();
+        botao.setPreferredSize(new Dimension(tamanho.width, Math.max(36, tamanho.height)));
+        botao.getAccessibleContext().setAccessibleDescription(descricao);
+        botao.addActionListener(evt -> item.doClick(0));
+        painel.add(botao, BorderLayout.SOUTH);
+        return painel;
     }
 
     /**
@@ -473,35 +560,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaPrincipal().setVisible(true);
-            }
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            TemaInterface.instalar();
+            new TelaPrincipal().setVisible(true);
         });
     }
 
